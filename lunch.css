@@ -1,0 +1,123 @@
+/* Общие */
+.page-title { text-align:center; margin:20px 0 10px; font-size:32px; color:#333; }
+
+/* Секции блюд */
+.food-section { margin: 40px 0; }
+.foods-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 колонки */
+  gap: 10px; /* отступ между элементами */
+}
+
+/* Карточка блюда (section>div>div) */
+.food-card {
+  background: white;
+  border-radius: 35px;
+  padding: 30px 40px; /* 30px сверху/снизу, 40px справа/слева */
+  display: flex;
+  flex-direction: column; /* вертикальное направление */
+  gap: 12px;
+  filter: drop-shadow(17px 19px 24px rgba(0,0,0,0.13));
+  cursor: pointer;
+  transition: transform .18s ease, border .18s ease;
+  min-height: 420px; /* чтобы карточки были одинаковой высоты */
+  justify-content: flex-start;
+  position: relative;
+}
+
+.food-card:hover { border: 2px solid tomato; transform: translateY(-6px); }
+
+/* Изображение внутри карточки */
+.food-card img {
+  width: 100%;
+  border-radius: 25px;
+  object-fit: cover;
+  height: 220px;
+}
+
+/* Текстовые элементы */
+.price { font-size: 20px; font-weight: 700; margin: 8px 0 0; }
+.name { font-size: 18px; font-weight: 700; margin: 4px 0; }
+.weight { color: gray; margin-bottom: 12px; }
+
+/* Кнопка */
+.food-card button {
+  background: #f1eee9;
+  padding: 10px 30px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: auto; /* обязательно, чтобы кнопки располагались на одном уровне */
+  align-self: stretch;
+  font-weight: 700;
+  transition: background .18s ease, color .18s ease;
+}
+.food-card:hover button { background: #4a90e2; color: white; }
+
+/* Блок "Сделать заказ" */
+.order-section { margin: 50px 0; text-align: center; }
+.order-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-top: 20px;
+  align-items: start;
+}
+.order-left, .order-right {
+  text-align: left;
+}
+.order-left h3, .order-right h3 { margin-top: 0; }
+
+.order-form label { display:block; margin-bottom: 12px; font-weight: 500; }
+.order-form select, .order-form input[type="text"], .order-form input[type="email"],
+.order-form input[type="tel"], .order-form textarea, .order-form input[type="time"] {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #cfcfcf;
+  border-radius: 4px;
+  margin-top: 6px;
+}
+
+/* Метки и мелкие заметки */
+.small-note { font-size: 13px; color: #666; margin-top: 6px; }
+
+/* Группа времени */
+.time-group { border: none; margin: 10px 0; padding: 0; }
+
+/* Кнопки формы */
+.order-buttons { display:flex; gap:12px; margin-top:14px; }
+.order-buttons .btn-reset, .order-buttons .btn-submit {
+  padding: 8px 18px;
+  border-radius: 6px;
+  border: 1px solid #999;
+  background: white;
+  cursor: pointer;
+  font-weight: 700;
+}
+.order-buttons .btn-submit { background: #4a90e2; color: white; border-color: #4a90e2; }
+.order-buttons .btn-reset:hover, .order-buttons .btn-submit:hover { opacity: 0.9; }
+
+/* Медиазапросы (адаптив) */
+
+/* <=800px: 2 колонки в гриде карточек */
+@media (max-width: 800px) {
+  .foods-grid { grid-template-columns: repeat(2, 1fr); }
+  .order-form { grid-template-columns: 1fr; } /* форма становится одна колонка */
+  .page-title { font-size: 28px; }
+}
+
+/* <=600px: 1 колонка карточек, вертикальная навигация (через shared CSS) */
+@media (max-width: 600px) {
+  .foods-grid { grid-template-columns: 1fr; }
+  .food-card { min-height: auto; }
+  /* Меню: центровать и ставить вертикально (на общей стилизации в style.css) */
+  nav ul { justify-content: center; }
+  nav ul li a { font-size: 16px; }
+  .page-title { font-size: 24px; }
+}
+
+/* <=400px: ещё компактнее */
+@media (max-width: 400px) {
+  .food-card img { height: 180px; }
+  .page-title { font-size: 20px; }
+}

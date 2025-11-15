@@ -1,0 +1,14 @@
+/* Стиль печати: убрать декоративные элементы, оставить содержимое */
+
+/* Убрать меню, кнопки, тени, футер */
+nav, button, .order-buttons { display: none !important; }
+.food-card { box-shadow: none !important; border: 1px solid #ccc !important; background: white !important; }
+body { background: white !important; color: black !important; }
+img { max-width: 100% !important; height: auto !important; }
+
+/* Упростить форму: сделать поля читабельными */
+.order-form, .feedback-form { box-shadow: none; border: none; }
+footer { display: none !important; }
+
+/* Уменьшить отступы для печати */
+main { margin: 0; padding: 0; }

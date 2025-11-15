@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Сделать заказ</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="lunch.css">
+  <link rel="stylesheet" href="print.css" media="print">
+</head>
+<body>
+
+<header>
+  <nav>
+    <ul>
+      <li><a href="site.html">Главная</a></li>
+      <li><a href="lunch.html" class="active">Сделать заказ</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+
+  <h1 class="page-title">Сделать заказ</h1>
+
+  <!-- СУПЫ -->
+  <section class="food-section" aria-labelledby="soups">
+    <h2 id="soups">Супы</h2>
+
+    <div class="foods-grid" role="list"> 
+
+      <div class="food-card" role="listitem">
+        <img src="images/soupe1.webp" alt="Овощной суп">
+        <p class="price">199 ₽</p>
+        <p class="name">Овощной суп</p>
+        <p class="weight">350 г</p>
+        <button>Добавить</button>
+      </div>
+
+      <div class="food-card" role="listitem">
+        <img src="images/soupe2.webp" alt="Томатный суп">
+        <p class="price">249 ₽</p>
+        <p class="name">Томатный суп</p>
+        <p class="weight">330 г</p>
+        <button>Добавить</button>
+      </div>
+
+      <div class="food-card" role="listitem">
+        <img src="images/soupe3.webp" alt="Куриный суп">
+        <p class="price">219 ₽</p>
+        <p class="name">Куриный суп</p>
+        <p class="weight">340 г</p>
+        <button>Добавить</button>
+      </div>
+    </div>
+  </section>
+
+  
+  <section class="food-section" aria-labelledby="mains">
+    <h2 id="mains">Главные блюда</h2>
+
+    <div class="foods-grid" role="list">
+      <div class="food-card" role="listitem">
+        <img src="images/food1.webp" alt="Стейк">
+        <p class="price">399 ₽</p>
+        <p class="name">Стейк</p>
+        <p class="weight">250 г</p>
+        <button>Добавить</button>
+      </div>
+
+      <div class="food-card" role="listitem">
+        <img src="images/food2.webp" alt="Паста">
+        <p class="price">349 ₽</p>
+        <p class="name">Паста с соусом</p>
+        <p class="weight">300 г</p>
+        <button>Добавить</button>
+      </div>
+
+      <div class="food-card" role="listitem">
+        <img src="images/food3.webp" alt="Курица гриль">
+        <p class="price">299 ₽</p>
+        <p class="name">Курица гриль</p>
+        <p class="weight">280 г</p>
+        <button>Добавить</button>
+      </div>
+    </div>
+  </section>
+
+  
+  <section class="food-section" aria-labelledby="drinks">
+    <h2 id="drinks">Напитки</h2>
+
+    <div class="foods-grid" role="list">
+      <div class="food-card" role="listitem">
+        <img src="images/drink1.webp" alt="Апельсиновый сок">
+        <p class="price">120 ₽</p>
+        <p class="name">Апельсиновый сок</p>
+        <p class="weight">300 мл</p>
+        <button>Добавить</button>
+      </div>
+
+      <div class="food-card" role="listitem">
+        <img src="images/drink2.webp" alt="Яблочный сок">
+        <p class="price">90 ₽</p>
+        <p class="name">Яблочный сок</p>
+        <p class="weight">300 мл</p>
+        <button>Добавить</button>
+      </div>
+
+      <div class="food-card" role="listitem">
+        <img src="images/drink3.webp" alt="Морковный сок">
+        <p class="price">110 ₽</p>
+        <p class="name">Морковный сок</p>
+        <p class="weight">300 мл</p>
+        <button>Добавить</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Блок "Сделать заказ" (по макету из Word) -->
+  <section class="order-section">
+    <h2>Сделать заказ</h2>
+
+    <form action="https://httpbin.org/post" method="POST" class="order-form">
+      <div class="order-left">
+        <h3>Ваш заказ</h3>
+
+        <label>Суп
+          <select name="soup">
+            <option value="">-- Выберите суп --</option>
+            <option>Овощной суп</option>
+            <option>Томатный суп</option>
+            <option>Куриный суп</option>
+          </select>
+        </label>
+
+        <label>Главное блюдо
+          <select name="main">
+            <option value="">-- Выберите главное блюдо --</option>
+            <option>Стейк</option>
+            <option>Паста</option>
+            <option>Курица гриль</option>
+          </select>
+        </label>
+
+        <label>Напиток
+          <select name="drink">
+            <option value="">-- Выберите напиток --</option>
+            <option>Апельсиновый сок</option>
+            <option>Яблочный сок</option>
+            <option>Морковный сок</option>
+          </select>
+        </label>
+
+        <label>Комментарии к заказу
+          <textarea name="comments" rows="6"></textarea>
+        </label>
+      </div>
+
+      <div class="order-right">
+        <h3>Ваши данные</h3>
+
+        <label>Имя
+          <input type="text" name="name">
+        </label>
+
+        <label>Email
+          <input type="email" name="email">
+        </label>
+
+        <label class="consent-small">
+          <input type="checkbox" name="promos" checked> Получать информацию о скидках и акциях
+        </label>
+
+        <label>Номер телефона
+          <input type="tel" name="phone">
+        </label>
+
+        <label>Адрес доставки
+          <input type="text" name="address">
+        </label>
+        <p class="small-note">Доставка осуществляется только по Москве</p>
+
+        <fieldset class="time-group">
+          <legend>Время доставки</legend>
+          <label><input type="radio" name="time_type" value="asap" checked> Как можно скорее</label>
+          <label><input type="radio" name="time_type" value="at_time"> К указанному времени</label>
+        </fieldset>
+
+        <label>Укажите время доставки
+          <input type="time" name="delivery_time">
+        </label>
+
+        <div class="order-buttons">
+          <button type="reset" class="btn-reset">Сбросить</button>
+          <button type="submit" class="btn-submit">Отправить</button>
+        </div>
+      </div>
+    </form>
+  </section>
+
+</main>
+
+<footer>
+  <p>&copy; 2025 — Ваш ресторан</p>
+</footer>
+
+</body>
+</html>
