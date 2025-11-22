@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Главная страница</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Основные стили -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Печать -->
+  <link rel="stylesheet" href="print.css" media="print">
+</head>
+<body>
+
+<header>
+  <nav>
+    <ul>
+      <li><a href="site.html" class="active">Главная</a></li>
+      <li><a href="lunch.html">Сделать заказ</a></li>
+      <li><a href="#about">Обо мне</a></li>
+      <li><a href="#gallery">Галерея</a></li>
+      <li><a href="#table">Таблица</a></li>
+      <li><a href="#feedback">Обратная связь</a></li>
+      <li><a href="#auth">Аутентификация</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <section id="about">
+    <h2>Обо мне</h2>
+    <p>Здесь раздел "Обо мне"</p>
+  </section>
+
+  <section id="gallery">
+    <h2>Галерея</h2>
+    <div class="gallery-container">
+      <img src="images/picture.webp" alt="Изображение">
+    </div>
+  </section>
+
+  <section id="table">
+    <h2>Таблица</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Языки программирования</th>
+          <th>Заголовок 2</th>
+          <th>Заголовок 3</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>C++</td><td>-</td><td>-</td></tr>
+        <tr><td>HTML</td><td>-</td><td>-</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="feedback">
+    <h2>Форма обратной связи</h2>
+    <form action="https://httpbin.org/post" method="POST" enctype="multipart/form-data" class="feedback-form">
+      <label>ФИО:<br>
+        <input type="text" name="fio" required>
+      </label>
+
+      <label>Email:<br>
+        <input type="email" name="email" required>
+      </label>
+
+      <fieldset>
+        <legend>Откуда вы узнали о нас?</legend>
+        <label><input type="radio" name="source" value="internet"> Интернет</label>
+        <label><input type="radio" name="source" value="friends"> Друзья</label>
+        <label><input type="radio" name="source" value="ads"> Реклама</label>
+      </fieldset>
+
+      <label>Тип обращения:<br>
+        <select name="type">
+          <option value="complaint">Жалоба</option>
+          <option value="suggestion">Предложение</option>
+        </select>
+      </label>
+
+      <label>Текст сообщения:<br>
+        <textarea name="message" rows="5" required></textarea>
+      </label>
+
+      <label>Вложение:<br>
+        <input type="file" name="file">
+      </label>
+
+      <label class="consent">
+        <input type="checkbox" name="consent" required> Даю согласие на обработку персональных данных
+      </label>
+
+      <button type="submit">Отправить</button>
+    </form>
+  </section>
+
+  <section id="auth" class="auth-section">
+    <div class="auth-container">
+      <form action="https://httpbin.org/post" method="POST" class="auth-form">
+        <h2>Вход в систему</h2>
+
+        <label>Логин:<br>
+          <input type="text" name="login" required>
+        </label>
+
+        <label>Пароль:<br>
+          <input type="password" name="password" required>
+        </label>
+
+        <label class="remember">
+          <input type="checkbox" name="remember"> Запомнить меня
+        </label>
+
+        <button type="submit">Войти</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer id="contacts">
+  <p class="footer-call">Позвонить нам +7-000-000-00-00</p>
+  <p>&copy; 2025</p>
+</footer>
+
+</body>
+</html>

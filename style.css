@@ -1,42 +1,60 @@
+/* Общая верстка: чтобы футер был внизу */
+* { box-sizing: border-box; }
+html,body { height: 100%; }
 body {
   margin: 0;
   font-family: 'Roboto', sans-serif;
   background-color: #f5f5f5;
   color: #333;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-
+/* header/nav — flex */
 header {
   background: #4a90e2;
-  padding: 15px 0;
+}
+nav {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 12px 20px;
 }
 nav ul {
   list-style: none;
   display: flex;
+  gap: 15px;            /* отступ для флексов: 15px */
+  flex-wrap: wrap;      /* разрешить перенос */
   justify-content: center;
   margin: 0;
   padding: 0;
 }
-nav ul li { margin: 0 20px; }
+nav ul li { }
 nav ul li a {
   color: white;
   text-decoration: none;
-  font-weight: bold;
-  transition: opacity 0.3s;
+  font-weight: 700;
+  padding: 6px 8px;
+  transition: opacity .2s, color .2s;
+  display: inline-block;
 }
-nav ul li a:hover { opacity: 0.7; }
+nav ul li a:hover { opacity: 0.85; color: #e6f5ff; }
+nav ul li a.active { color: #ffffff; border-bottom: 3px solid rgba(255,255,255,0.15); }
 
+/* Главный контейнер */
 main {
-  max-width: 900px;
-  margin: 20px auto;
+  max-width: 1100px;
+  margin: 24px auto;
   padding: 20px;
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  flex: 1 0 auto;
 }
+
+/* Секции */
 section {
   margin-bottom: 40px;
-  text-align: center;
 }
 h2 {
   color: #4a90e2;
@@ -45,11 +63,9 @@ h2 {
   padding-bottom: 5px;
 }
 
-
-img {
-  max-width: 100%;
-  border-radius: 8px;
-}
+/* Галерея и таблицы */
+img { max-width: 100%; display: block; }
+.gallery-container { text-align: center; }
 table {
   width: 100%;
   border-collapse: collapse;
@@ -60,22 +76,19 @@ table th, table td {
   padding: 10px;
   text-align: center;
 }
-table th {
-  background: #4a90e2;
-  color: white;
-}
+table th { background: #4a90e2; color: white; }
 
+/* Футер */
 footer {
-  background: #4a90e2;
+  background: #0b0b0b;
   color: white;
   text-align: center;
-  padding: 20px 0;
+  padding: 14px 20px;
+  margin-top: 20px;
 }
-footer h2 { color: white; border: none; margin-bottom: 10px; }
-footer a { color: white; text-decoration: none; font-weight: bold; }
-footer a:hover { text-decoration: underline; }
+footer .footer-call { background: #000; padding: 10px 20px; margin: 0; }
 
-
+/* Форма обратной связи */
 .feedback-form {
   display: flex;
   flex-direction: column;
@@ -110,50 +123,34 @@ footer a:hover { text-decoration: underline; }
   font-weight: bold;
   transition: background 0.3s;
 }
-.feedback-form button:hover {
-  background: #3a7bc8;
-}
+.feedback-form button:hover { background: #3a7bc8; }
 
-
+/* Аутентификация (оставляем, но исправляем мелкие ошибки) */
 .auth-section {
   background: url('images/bg.jpg') no-repeat center center/cover;
-  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 40 px;
+  margin-top: 40px;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 20px;
 }
 .auth-container {
-  background: rgba(255,255,255,0.9);
-  padding: 40px;
+  background: rgba(255,255,255,0.95);
+  padding: 24px;
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
-.auth-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  width: 300px;
-  text-align: left;
-}
-.auth-form input[type="text"],
-.auth-form input[type="password"] {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-.auth-form button {
-  background: #4a90e2;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-}
-.auth-form button:hover {
-  background: #3a7bc8;
+.auth-form { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 320px; }
+
+/* Мелкие отклики */
+a { transition: color .15s; }
+a:hover { color: #e6f5ff; }
+
+/* Медиазапрос: таблица на главной (<=400px) */
+@media (max-width: 400px) {
+  table, table th, table td { font-size: 12px; }
+  nav ul { gap: 8px; }
+  nav ul li a { font-size: 14px; padding: 6px; }
 }

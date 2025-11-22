@@ -9,11 +9,11 @@
   gap: 10px; /* отступ между элементами */
 }
 
-/* Карточка блюда (section>div>div) */
+/* Карточка блюда */
 .food-card {
   background: white;
   border-radius: 35px;
-  padding: 30px 40px; /* 30px сверху/снизу, 40px справа/слева */
+  padding: 30px 40px;
   display: flex;
   flex-direction: column; /* вертикальное направление */
   gap: 12px;
@@ -26,6 +26,23 @@
 }
 
 .food-card:hover { border: 2px solid tomato; transform: translateY(-6px); }
+
+/* Выделение выбранной карточки */
+.food-card.selected {
+  border: 2px solid tomato; /* Рамка, как при :hover */
+  transform: translateY(-6px); /* Сдвиг, как при :hover */
+}
+
+/* При наведении на выбранную карточку сохраняем стиль выделения */
+.food-card.selected:hover {
+  border: 2px solid tomato;
+  transform: translateY(-6px);
+}
+
+/* Дополнительно, для красоты в блоке заказа */
+#order-details p {
+    line-height: 1.4;
+}
 
 /* Изображение внутри карточки */
 .food-card img {
@@ -116,7 +133,7 @@
   .page-title { font-size: 24px; }
 }
 
-/* <=400px: ещё компактнее */
+
 @media (max-width: 400px) {
   .food-card img { height: 180px; }
   .page-title { font-size: 20px; }
