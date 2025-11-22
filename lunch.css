@@ -52,6 +52,33 @@
   height: 220px;
 }
 
+.filter-btn {
+  padding: 8px 16px;
+  border: 2px solid #4a90e2;
+  background: white;
+  color: #4a90e2;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all .2s;
+}
+
+.filter-btn.active {
+  background: #4a90e2;
+  color: white;
+}
+
+.filter-btn:hover:not(.active) {
+  background: #e6f2ff;
+}
+
+.filters {
+  margin: 15px 0;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 /* Текстовые элементы */
 .price { font-size: 20px; font-weight: 700; margin: 8px 0 0; }
 .name { font-size: 18px; font-weight: 700; margin: 4px 0; }

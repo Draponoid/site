@@ -1,136 +1,94 @@
-// Этот скрипт выполняется синхронно сразу после render-dishes.js, 
-// гарантируя, что все карточки уже есть в DOM.
+const selectedDishes = {};   // { soup: dishObj, main: ..., starter: ..., drink: ..., dessert: ... }
 
-// Хранение выбранных блюд: { soup: dishObject, main: dishObject, drink: dishObject }
-const selectedDishes = {};
-
-// DOM-элементы для обновления
 const orderDetailsDiv = document.getElementById('order-details');
 const totalCostDiv = document.getElementById('total-cost');
 const totalPriceValueP = document.getElementById('total-price-value');
 const orderForm = document.querySelector('.order-form');
-const foodCards = document.querySelectorAll('.food-card'); 
-const resetButton = document.querySelector('.btn-reset');
 
-// Категории для отображения в блоке заказа
 const categoryTitles = {
-    soup: 'Суп',
-    main: 'Главное блюдо',
-    drink: 'Напиток',
+  soup:    'Суп',
+  main:    'Главное блюдо',
+  starter: 'Салат/стартер',
+  drink:   'Напиток',
+  dessert: 'Десерт'
 };
 
-/**
- * Обновляет блок "Ваш заказ" и подсчитывает итоговую стоимость.
- */
 function updateOrderDetails() {
-    let totalCost = 0;
-    let orderHtml = '';
-    const isAnyDishSelected = Object.keys(selectedDishes).some(key => selectedDishes[key]);
+  let total = 0;
+  let html = '';
 
-    if (!isAnyDishSelected) {
-        orderDetailsDiv.innerHTML = '<p>Ничего не выбрано</p>';
-        totalCostDiv.style.display = 'none';
-        totalPriceValueP.textContent = '';
-        return;
+  const hasAny = Object.values(selectedDishes).some(d => d);
+
+  if (!hasAny) {
+    orderDetailsDiv.innerHTML = '<p>Ничего не выбрано</p>';
+    totalCostDiv.style.display = 'none';
+    return;
+  }
+
+  totalCostDiv.style.display = 'block';
+
+  Object.keys(categoryTitles).forEach(cat => {
+    const dish = selectedDishes[cat];
+    html += `<p style="margin:6px 0;"><strong>${categoryTitles[cat]}</strong></p>`;
+    if (dish) {
+      html += `<p style="margin:0 0 10px 0;">${dish.name} — ${dish.price}₽</p>`;
+      total += dish.price;
+    } else {
+      html += `<p style="margin:0 0 10px 0;color:#999;">Не выбрано</p>`;
     }
+  });
 
-    totalCostDiv.style.display = 'block';
-
-    // 1. Обновление списка выбранных блюд по категориям
-    Object.keys(categoryTitles).forEach(category => {
-        const dish = selectedDishes[category];
-        const categoryTitle = categoryTitles[category];
-
-        orderHtml += `<p style="margin: 6px 0;"><strong>${categoryTitle}</strong></p>`;
-
-        if (dish) {
-            orderHtml += `<p style="margin: 0 0 10px 0;">${dish.name} ${dish.price}₽</p>`;
-            totalCost += dish.price;
-        } else {
-            const noDishMessage = (category === 'drink') ? 'Напиток не выбран' : 'Блюдо не выбрано';
-            orderHtml += `<p style="margin: 0 0 10px 0; color: #999;">${noDishMessage}</p>`;
-        }
-    });
-
-    orderDetailsDiv.innerHTML = orderHtml;
-
-    // 2. Обновление итоговой стоимости
-    totalPriceValueP.textContent = `${totalCost}₽`;
+  orderDetailsDiv.innerHTML = html;
+  totalPriceValueP.textContent = total + '₽';
 }
 
-/**
- * Добавляет скрытые поля с ключевыми словами для отправки формы
- */
 function updateHiddenFields() {
-    // Удаляем предыдущие скрытые поля
-    orderForm.querySelectorAll('input[name^="selected_"]').forEach(input => input.remove());
-
-    // Добавляем новые скрытые поля
-    Object.keys(selectedDishes).forEach(category => {
-        const dish = selectedDishes[category];
-        if (dish) {
-            const hiddenInput = document.createElement('input');
-            hiddenInput.type = 'hidden';
-            hiddenInput.name = `selected_${category}`;
-            hiddenInput.value = dish.keyword; // Отправляем keyword
-            orderForm.appendChild(hiddenInput);
-        }
-    });
+  orderForm.querySelectorAll('input[name^="selected_"]').forEach(i => i.remove());
+  Object.keys(selectedDishes).forEach(cat => {
+    const dish = selectedDishes[cat];
+    if (dish) {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = `selected_${cat}`;
+      input.value = dish.keyword;
+      orderForm.appendChild(input);
+    }
+  });
 }
 
-// Инициализация
 updateOrderDetails();
 updateHiddenFields();
 
-// Обработчик клика на кнопку "Выбрать"
-foodCards.forEach(card => {
-    // Ищем кнопку внутри каждой карточки
-    const selectButton = card.querySelector('button'); 
+// Обработчик кнопок "Выбрать"
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.food-card button');
+  if (!btn) return;
 
-    if (selectButton) {
-        selectButton.addEventListener('click', () => {
-            const dishKeyword = card.getAttribute('data-dish');
-            const selectedDish = dishes.find(d => d.keyword === dishKeyword);
+  const card = btn.closest('.food-card');
+  const keyword = card.dataset.dish;
+  const dish = dishes.find(d => d.keyword === keyword);
+  if (!dish) return;
 
-            if (!selectedDish) return;
+  const category = dish.category;
 
-            const category = selectedDish.category;
+  // Снимаем выделение с предыдущего в этой категории
+  if (selectedDishes[category]) {
+    const prevCard = document.querySelector(`.food-card[data-dish="${selectedDishes[category].keyword}"]`);
+    if (prevCard) prevCard.classList.remove('selected');
+  }
 
-            // 1. Снятие выделения с предыдущего выбранного блюда в этой категории
-            const prevSelectedDish = selectedDishes[category];
-            if (prevSelectedDish) {
-                const prevCard = document.querySelector(`.food-card[data-dish="${prevSelectedDish.keyword}"]`);
-                if (prevCard) {
-                    prevCard.classList.remove('selected');
-                }
-            }
+  // Выделяем текущую карточку
+  card.classList.add('selected');
+  selectedDishes[category] = dish;
 
-            // 2. Обновление выбранного блюда и выделение новой карточки
-            selectedDishes[category] = selectedDish;
-            card.classList.add('selected');
-
-            // 3. Обновление секции "Ваш заказ" и стоимости
-            updateOrderDetails();
-
-            // 4. Обновление скрытых полей для отправки
-            updateHiddenFields();
-        });
-    }
+  updateOrderDetails();
+  updateHiddenFields();
 });
 
-// Обработчик для кнопки сброса формы (Reset)
-if (resetButton) {
-    resetButton.addEventListener('click', () => {
-        // Очистка выбранных блюд
-        Object.keys(selectedDishes).forEach(key => delete selectedDishes[key]);
-
-        // Снятие выделения со всех карточек
-        document.querySelectorAll('.food-card.selected').forEach(card => {
-            card.classList.remove('selected');
-        });
-
-        // Обновление секции заказа
-        updateOrderDetails();
-        updateHiddenFields();
-    });
-}
+// Сброс формы
+document.querySelector('.btn-reset')?.addEventListener('click', () => {
+  Object.keys(selectedDishes).forEach(k => delete selectedDishes[k]);
+  document.querySelectorAll('.food-card.selected').forEach(c => c.classList.remove('selected'));
+  updateOrderDetails();
+  updateHiddenFields();
+});

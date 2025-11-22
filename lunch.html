@@ -9,6 +9,25 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="lunch.css">
   <link rel="stylesheet" href="print.css" media="print">
+
+  <style>
+    .filters { margin: 15px 0; display: flex; gap: 12px; flex-wrap: wrap; }
+    .filter-btn {
+      padding: 8px 16px;
+      border: 2px solid #4a90e2;
+      background: white;
+      color: #4a90e2;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all .2s;
+    }
+    .filter-btn.active {
+      background: #4a90e2;
+      color: white;
+    }
+    .filter-btn:hover:not(.active) { background: #e6f2ff; }
+  </style>
 </head>
 <body>
 
@@ -22,36 +41,72 @@
 </header>
 
 <main>
-
   <h1 class="page-title">Сделать заказ</h1>
 
-  <section class="food-section" aria-labelledby="soups">
-    <h2 id="soups">Супы</h2>
+<!-- СУПЫ -->
+<section class="food-section" data-category="soup">
+  <h2 id="soups">Супы</h2>
+  <div class="filters">
+    <button type="button" class="filter-btn" data-kind="fish">рыбный</button>
+    <button type="button" class="filter-btn" data-kind="meat">мясной</button>
+    <button type="button" class="filter-btn" data-kind="veg">вегетарианский</button>
+  </div>
+  <div class="foods-grid" role="list"></div>
+</section>
 
-    <div class="foods-grid" role="list"> 
-      </div>
-  </section>
+<!-- ГЛАВНЫЕ БЛЮДА -->
+<section class="food-section" data-category="main">
+  <h2 id="mains">Главные блюда</h2>
+  <div class="filters">
+    <button type="button" class="filter-btn" data-kind="fish">рыбное</button>
+    <button type="button" class="filter-btn" data-kind="meat">мясное</button>
+    <button type="button" class="filter-btn" data-kind="veg">вегетарианское</button>
+  </div>
+  <div class="foods-grid" role="list"></div>
+</section>
 
-  <section class="food-section" aria-labelledby="mains">
-    <h2 id="mains">Главные блюда</h2>
+<!-- САЛАТЫ И СТАРТЕРЫ -->
+<section class="food-section" data-category="starter">
+  <h2 id="starters">Салаты и стартеры</h2>
+  <div class="filters">
+    <button type="button" class="filter-btn" data-kind="fish">рыбный</button>
+    <button type="button" class="filter-btn" data-kind="meat">мясной</button>
+    <button type="button" class="filter-btn" data-kind="veg">вегетарианский</button>
+  </div>
+  <div class="foods-grid" role="list"></div>
+</section>
 
-    <div class="foods-grid" role="list">
-      </div>
-  </section>
+<!-- НАПИТКИ -->
+<section class="food-section" data-category="drink">
+  <h2 id="drinks">Напитки</h2>
+  <div class="filters">
+    <button type="button" class="filter-btn" data-kind="cold">холодный</button>
+    <button type="button" class="filter-btn" data-kind="hot">горячий</button>
+  </div>
+  <div class="foods-grid" role="list"></div>
+</section>
 
-  <section class="food-section" aria-labelledby="drinks">
-    <h2 id="drinks">Напитки</h2>
+<!-- ДЕСЕРТЫ -->
+<section class="food-section" data-category="dessert">
+  <h2 id="desserts">Десерты</h2>
+  <div class="filters">
+    <button type="button" class="filter-btn" data-kind="small">маленькая порция</button>
+    <button type="button" class="filter-btn" data-kind="medium">средняя порция</button>
+    <button type="button" class="filter-btn" data-kind="large">большая порция</button>
+  </div>
+  <div class="foods-grid" role="list"></div>
+</section>
 
-    <div class="foods-grid" role="list">
-      </div>
-  </section>
-
-
+  <!-- ФОРМА ЗАКАЗА -->
   <section class="order-section">
     <form action="https://httpbin.org/post" method="POST" class="order-form">
       <div class="order-left">
         <h3>Ваш заказ</h3>
-        
+        <div id="order-details"></div>
+        <div id="total-cost" style="display:none;margin-top:15px;padding-top:15px;border-top:1px solid #ccc;">
+          <p><strong>Стоимость заказа</strong></p>
+          <p id="total-price-value" style="font-size:1.2em;font-weight:bold;"></p>
+        </div>
         <label>Комментарий к заказу
           <textarea name="comments" rows="6"></textarea>
         </label>
@@ -59,26 +114,13 @@
 
       <div class="order-right">
         <h3>Ваши данные</h3>
-
-        <label>Имя
-          <input type="text" name="name">
-        </label>
-
-        <label>Email
-          <input type="email" name="email">
-        </label>
-
+        <label>Имя <input type="text" name="name"></label>
+        <label>Email <input type="email" name="email"></label>
         <label class="consent-small">
           <input type="checkbox" name="promos" checked> Получать информацию о скидках и акциях
         </label>
-
-        <label>Номер телефона
-          <input type="tel" name="phone">
-        </label>
-
-        <label>Адрес доставки
-          <input type="text" name="address">
-        </label>
+        <label>Номер телефона <input type="tel" name="phone"></label>
+        <label>Адрес доставки <input type="text" name="address"></label>
         <p class="small-note">Доставка осуществляется только по Москве</p>
 
         <fieldset class="time-group">
@@ -87,9 +129,7 @@
           <label><input type="radio" name="time_type" value="at_time"> К указанному времени</label>
         </fieldset>
 
-        <label>Укажите время доставки
-          <input type="time" name="delivery_time">
-        </label>
+        <label>Укажите время доставки <input type="time" name="delivery_time"></label>
 
         <div class="order-buttons">
           <button type="reset" class="btn-reset">Сбросить</button>
@@ -100,12 +140,11 @@
   </section>
 </main>
 
-<footer>
-  <p>&copy; 2024 Кафе "Ланч"</p>
-</footer>
+<footer><p>&copy; 2024 Кафе "Ланч"</p></footer>
 
 <script src="dishes.js"></script>
-<script src="render-dishes.js"></script>
-<script src="order-logic.js"></script>
+    <script src="filter.js"></script>
+    <script src="render-dishes.js"></script>
+    <script src="order-logic.js"></script>
 </body>
 </html>
