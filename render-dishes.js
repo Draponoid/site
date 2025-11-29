@@ -1,5 +1,3 @@
-// render-dishes.js
-
 const sortedDishes = [...dishes].sort((a, b) => a.name.localeCompare(b.name));
 
 const categories = {
@@ -14,10 +12,10 @@ function createDishCard(dish) {
     const card = document.createElement('div');
     card.className = 'food-card';
     card.dataset.dish = dish.keyword;
-    // !!! КЛЮЧЕВОЙ МОМЕНТ 1: Добавляем data-kind для фильтрации
     card.dataset.kind = dish.kind;   
     card.setAttribute('role', 'listitem');
 
+    // Возвращаем оригинальный тег IMG (без заглушки)
     const img = `images/${dish.image}.webp`;
 
     card.innerHTML = `
@@ -31,14 +29,8 @@ function createDishCard(dish) {
     return card;
 }
 
-// 1. Отрисовка всех блюд
+//Отрисовка всех блюд
 sortedDishes.forEach(dish => {
   const grid = categories[dish.category];
   if (grid) grid.appendChild(createDishCard(dish));
 });
-
-// 2. Активация фильтров
-// !!! КЛЮЧЕВОЙ МОМЕНТ 2: Вызываем функцию инициализации фильтров ПОСЛЕ рендеринга
-if (typeof initializeFilters === 'function') {
-    initializeFilters();
-}
