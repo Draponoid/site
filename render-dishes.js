@@ -1,36 +1,68 @@
-const sortedDishes = [...dishes].sort((a, b) => a.name.localeCompare(b.name));
+const categoryMap = {
+    'soup': 'soup',
+    'main-course': 'main-course',    
+    'salad': 'salad',       
+    'drink': 'drink',
+    'dessert': 'dessert'
+};
+
 
 const categories = {
   soup:    document.querySelector('[data-category="soup"] .foods-grid'),
-  main:    document.querySelector('[data-category="main"] .foods-grid'),
-  starter: document.querySelector('[data-category="starter"] .foods-grid'),
+  'main-course': document.querySelector('[data-category="main-course"] .foods-grid'), 
+  salad:   document.querySelector('[data-category="salad"] .foods-grid'),           
   drink:   document.querySelector('[data-category="drink"] .foods-grid'),
   dessert: document.querySelector('[data-category="dessert"] .foods-grid')
 };
 
+
 function createDishCard(dish) {
-    const card = document.createElement('div');
-    card.className = 'food-card';
-    card.dataset.dish = dish.keyword;
-    card.dataset.kind = dish.kind;   
-    card.setAttribute('role', 'listitem');
+    const defaultImage = 'https://via.placeholder.com/400x220?text=Нет+фото';
+    let imageUrl = dish.image;
 
-    // Возвращаем оригинальный тег IMG (без заглушки)
-    const img = `images/${dish.image}.webp`;
+    if (imageUrl && !imageUrl.startsWith('http') && window.API_BASE_URL) {
+        imageUrl = `${window.API_BASE_URL}${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
+    }
 
-    card.innerHTML = `
-        <img src="${img}" alt="${dish.name}">
-        <p class="price">${dish.price} ₽</p>
-        <p class="name">${dish.name}</p>
-        <p class="weight">${dish.count}</p>
-        <button type="button">Выбрать</button>
+    const finalImageUrl = imageUrl || defaultImage;
+    const description = dish.description || 'Описание отсутствует.';
+    const weightText = dish.weight ? `${dish.weight} г.` : 'Вес не указан';
+    
+    return `
+        <div class="food-card" data-dish="${dish.keyword}" data-kind="${dish.kind}" role="listitem">
+            <img src="${finalImageUrl}" alt="${dish.name}" loading="lazy" onerror="this.onerror=null;this.src='${defaultImage}';">
+            <h4 class="name">${dish.name}</h4>
+            <p class="weight">${dish.count}</p>
+            <p class="description">${description}</p>
+            <p class="price">${dish.price} ₽</p>
+            <button type="button">Выбрать</button>
+        </div>
     `;
-
-    return card;
 }
 
-//Отрисовка всех блюд
-sortedDishes.forEach(dish => {
-  const grid = categories[dish.category];
-  if (grid) grid.appendChild(createDishCard(dish));
-});
+
+function renderDishes() {
+    console.log('Попытка отрисовки блюд...');
+    
+    if (!window.dishes || window.dishes.length === 0) {
+        return;
+    }
+    
+    Object.values(categories).forEach(grid => {
+        if (grid) grid.innerHTML = '';
+    });
+
+
+    window.dishes.forEach(dish => {
+        const categoryKey = categoryMap[dish.category]; 
+        const grid = categories[categoryKey]; 
+        
+        if (grid) {
+             grid.insertAdjacentHTML('beforeend', createDishCard(dish));
+        }
+    });
+
+    if (typeof updateOrderDetails === 'function') {
+        updateOrderDetails();
+    }
+}

@@ -64,7 +64,7 @@
         </div>
     </div>
 
-    <div class="food-section" data-category="main">
+    <div class="food-section" data-category="main-course">
       <h3>Главные блюда</h3>
       <div class="filters" role="group" aria-label="Фильтр вторых блюд">
         <button class="filter-btn" data-kind="meat">Мясные</button>
@@ -75,7 +75,7 @@
         </div>
     </div>
 
-    <div class="food-section" data-category="starter">
+    <div class="food-section" data-category="salad">
       <h3>Салаты/Стартеры</h3>
       <div class="filters" role="group" aria-label="Фильтр салатов">
         <button class="filter-btn" data-kind="meat">Мясные</button>
@@ -100,6 +100,7 @@
       <h3>Десерты</h3>
       <div class="filters" role="group" aria-label="Фильтр десертов">
         <button class="filter-btn" data-kind="small">Маленькие</button>
+        <button type="button" class="filter-btn" data-kind="medium">Средний</button>
         <button class="filter-btn" data-kind="large">Большие</button>
       </div>
       <div class="foods-grid" role="list">
@@ -159,17 +160,13 @@
     <div class="modal-content">
         <h4 id="modal-title">Уведомление</h4>
         <p id="modal-message">Сообщение</p>
-        <button id="modal-close-btn">Окей 👌</button>
+        <button id="modal-close-btn">Окей </button>
     </div>
 </div>
 
-<script src="dishes.js"></script>
+<script src="dishes.js"></script> 
+<script src="render-dishes.js"></script> 
 <script src="filter.js"></script>
-<script src="render-dishes.js"></script>
 <script src="order-logic.js"></script>
-<script>
-  // ЭТОТ ВЫЗОВ АКТИВИРУЕТ ФИЛЬТРЫ, ОПРЕДЕЛЕННЫЕ В filter.js
-  initializeFilters(); 
-</script>
 </body>
 </html>
