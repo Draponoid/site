@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>История заказов</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="lunch.css">
+  
+  <style>
+    /* === ИСПРАВЛЕНИЕ ЦВЕТА ШРИФТА === */
+    .orders-table th, .orders-table td {
+        color: #333 !important; /* Делаем шрифт темным принудительно */
+    }
+    
+    .orders-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        background: white;
+        border: 1px solid #ddd; /* Рамка вокруг таблицы */
+    }
+    .orders-table th, .orders-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    .orders-table th {
+        background-color: #f8f9fa;
+        font-weight: 700;
+    }
+    
+    /* Кнопки действий */
+    .actions-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+        margin: 0 5px;
+        padding: 5px;
+        transition: color 0.2s;
+    }
+    .actions-btn:hover { color: #4a90e2; }
+
+    /* Модальные окна */
+    .modal-overlay { 
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.5); display: none; 
+        justify-content: center; align-items: center; z-index: 2000; 
+    }
+    .modal-content { 
+        background: white; padding: 25px; border-radius: 12px; 
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3); width: 500px; max-width: 90%; 
+        max-height: 90vh; overflow-y: auto; text-align: left;
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .modal-header h4 { margin: 0; font-size: 20px; color: #333; }
+    .modal-close { background: none; border: none; font-size: 28px; cursor: pointer; line-height: 1; }
+    
+    .modal-row { margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; }
+    .modal-row:last-child { border-bottom: none; }
+    .modal-row label { font-weight: bold; display: block; margin-bottom: 4px; color: #555; font-size: 14px; }
+    .modal-row p { margin: 0; color: #000; } /* Цвет текста внутри модалки */
+    
+    .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+    
+    /* Кнопки в модалке */
+    .btn-secondary, .btn-primary, .btn-danger {
+        padding: 10px 20px; border-radius: 6px; border: none; 
+        font-weight: bold; cursor: pointer; 
+    }
+    .btn-secondary { background: #e0e0e0; color: #333; }
+    .btn-primary { background: #4a90e2; color: white; }
+    .btn-danger { background: #e74c3c; color: white; }
+    
+    /* Форма редактирования */
+    .modal-form input, .modal-form textarea, .modal-form select {
+        width: 100%; padding: 8px; border: 1px solid #ccc; 
+        border-radius: 4px; box-sizing: border-box; margin-top: 4px;
+        color: #000;
+    }
+
+    /* Уведомления */
+    .notification {
+        position: fixed; top: 20px; right: 20px; padding: 15px 25px;
+        background: white; border-left: 5px solid #4CAF50;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 3000; display: none;
+        color: #333; font-weight: 500;
+    }
+    .notification.error { border-left-color: #e74c3c; }
+  </style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <ul>
+      <li><a href="site.html">Главная</a></li>
+      <li><a href="lunch.html">Собрать ланч</a></li>
+      <li><a href="order.html">Оформить заказ</a></li>
+      <li><a href="orders.html" class="active">Заказы</a></li>
+      <li><a href="site.html#about">Обо мне</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main style="max-width: 1200px; margin: 40px auto; padding: 0 20px;">
+  <section>
+    <h2 class="page-title" style="text-align: left; color: #333;">История заказов</h2>
+    
+    <div style="overflow-x: auto;">
+        <table class="orders-table">
+            <thead>
+                <tr>
+                    <th style="width: 5%">№</th>
+                    <th style="width: 15%">Дата оформления</th>
+                    <th style="width: 35%">Состав заказа</th>
+                    <th style="width: 10%">Стоимость</th>
+                    <th style="width: 15%">Время доставки</th>
+                    <th style="width: 15%">Действия</th>
+                </tr>
+            </thead>
+            <tbody id="orders-tbody">
+                </tbody>
+        </table>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>&copy; 2025 Доставка ланчей. Все права защищены.</p>
+</footer>
+
+<div id="modal-view" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4>Просмотр заказа</h4>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div id="view-content"></div>
+        <div class="modal-footer">
+            <button class="modal-close-btn btn-primary">ОК</button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-delete" class="modal-overlay">
+    <div class="modal-content" style="width: 400px;">
+        <div class="modal-header">
+            <h4>Удаление заказа</h4>
+            <button class="modal-close">&times;</button>
+        </div>
+        <p style="color:#333;">Вы уверены, что хотите удалить этот заказ?</p>
+        <div class="modal-footer">
+            <button class="modal-close-btn btn-secondary">Отмена</button>
+            <button id="confirm-delete-btn" class="btn-danger">Да</button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-edit" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4>Редактирование заказа</h4>
+            <button class="modal-close">&times;</button>
+        </div>
+        <form id="edit-form" class="modal-form">
+            <input type="hidden" name="id">
+            
+            <div class="modal-row">
+                <label>Дата оформления</label>
+                <span id="edit-created-at" style="color:#333;"></span>
+            </div>
+
+            <fieldset style="border: 1px solid #eee; padding: 10px; margin-bottom: 10px;">
+                <legend style="color:#333;">Доставка</legend>
+                <div class="modal-row">
+                    <label>Имя получателя</label>
+                    <input type="text" name="full_name" required>
+                </div>
+                <div class="modal-row">
+                    <label>Адрес доставки</label>
+                    <input type="text" name="delivery_address" required>
+                </div>
+                <div class="modal-row">
+                    <label>Тип доставки</label>
+                    <div style="color:#333;">
+                        <label style="display:inline; font-weight:normal; color:#333;"><input type="radio" name="delivery_type" value="now"> Как можно скорее</label><br>
+                        <label style="display:inline; font-weight:normal; color:#333;"><input type="radio" name="delivery_type" value="by_time"> Ко времени</label>
+                    </div>
+                </div>
+                <div class="modal-row">
+                    <label>Время доставки</label>
+                    <input type="time" name="delivery_time">
+                </div>
+                <div class="modal-row">
+                    <label>Телефон</label>
+                    <input type="tel" name="phone" required>
+                </div>
+                <div class="modal-row">
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+                </div>
+            </fieldset>
+
+            <div class="modal-row">
+                <label>Комментарий</label>
+                <textarea name="comment" rows="3"></textarea>
+            </div>
+
+            <fieldset style="border: 1px solid #eee; padding: 10px; margin-bottom: 10px;">
+                <legend style="color:#333;">Состав заказа</legend>
+                <div id="edit-order-composition" style="color:#333;"></div>
+            </fieldset>
+
+            <div class="modal-footer">
+                <button type="button" class="modal-close-btn btn-secondary">Отмена</button>
+                <button type="submit" class="btn-primary">Сохранить</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="notification" class="notification">Сообщение</div>
+
+<script src="dishes.js"></script>
+<script src="orders.js"></script> 
+</body>
+</html>

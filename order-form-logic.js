@@ -1,7 +1,11 @@
-// order-form-logic.js — ВЕРСИЯ ДЛЯ ЗАДАНИЯ (Читает LocalStorage)
+// order-form-logic.js
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🏁 [Order Page] Started');
+    
+    const API_KEY = '2fff1a57-5506-4824-9ebc-2167fa6dcbcf'; 
+    // Полный адрес для отправки заказа
+    const API_URL_ORDERS = `https://edu.std-900.ist.mospolytech.ru/labs/api/orders?api_key=${API_KEY}`;
 
     const DOM = {
         grid: document.getElementById('selected-grid'),
@@ -12,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
         form: document.getElementById('order-form')
     };
 
-    // Те же валидные комбо для проверки перед отправкой
     const VALID_COMBOS = [
         ['soup', 'main', 'starter', 'drink'],
         ['soup', 'main', 'drink'],
@@ -23,14 +26,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (DOM.form) DOM.form.style.display = 'grid';
 
-    // Получаем ID из LocalStorage
     function getOrderFromStorage() {
         try {
             const raw = localStorage.getItem('lunchOrder');
             if (raw && raw !== '{}') return JSON.parse(raw);
-        } catch(e) {
-            console.error(e);
-        }
+        } catch(e) { console.error(e); }
         return null;
     }
 
@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
         );
     }
 
-    // Ждем загрузки меню, чтобы превратить ID в картинки и цены
     const checkInterval = setInterval(() => {
         if (window.dishes && window.dishes.length > 0) {
             clearInterval(checkInterval);
@@ -63,17 +62,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (DOM.grid) DOM.grid.innerHTML = '';
         if (DOM.detailsDiv) DOM.detailsDiv.innerHTML = '';
 
-        // Перебираем категории (soup, main...) и их ID
         Object.keys(orderIds).forEach(cat => {
-            const id = orderIds[cat]; // Это keyword блюда
-            const dish = window.dishes.find(d => d.keyword === id); // Ищем объект по ID
+            const id = orderIds[cat]; 
+            const dish = window.dishes.find(d => d.keyword === id); 
             
             if (!dish) return;
 
             itemsFound++;
             totalCost += dish.price;
 
-            // Карточка
             if (DOM.grid) {
                 const card = document.createElement('div');
                 card.className = 'food-card';
@@ -87,10 +84,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <img src="${imgSrc}" style="width:100%; height:120px; object-fit:cover; border-radius:5px;">
                     <div style="font-weight:bold;">${dish.name}</div>
                     <div style="color:#e74c3c; font-weight:bold;">${dish.price} ₽</div>
-                    <button class="del-btn" style="margin-top:auto; padding:8px; cursor:pointer; background:#ffeba0; border:none; border-radius:5px;">Удалить</button>
+                    <button class="del-btn" type="button" style="margin-top:auto; padding:8px; cursor:pointer; background:#ffeba0; border:none; border-radius:5px;">Удалить</button>
                 `;
 
-                // Удаление: обновляем LocalStorage и перерисовываем
                 card.querySelector('.del-btn').addEventListener('click', () => {
                     const currentData = getOrderFromStorage();
                     delete currentData[cat];
@@ -100,7 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 DOM.grid.appendChild(card);
             }
 
-            // Чек
             if (DOM.detailsDiv) {
                 DOM.detailsDiv.innerHTML += `
                     <div style="display:flex; justify-content:space-between; margin-bottom:5px; border-bottom:1px solid #eee;">
@@ -117,32 +112,62 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Отправка формы
     if (DOM.form) {
         DOM.form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const orderIds = getOrderFromStorage();
+            const orderIds = getOrderFromStorage(); 
             
             if (!validateOrder(orderIds)) {
-                alert('Заказ неполный! Вы должны собрать комбо (Суп/Главное + Напиток).');
+                alert('Заказ неполный! Соберите комбо (Суп/Главное + Напиток).');
                 return;
             }
 
             const fd = new FormData(DOM.form);
-            // Добавляем ID блюд в форму
-            Object.entries(orderIds).forEach(([cat, id]) => {
-                fd.append(`selected_${cat}`, id); // отправляем keyword
+
+            const mapCategoryToApiField = {
+                'soup': 'soup_id',
+                'main': 'main_course_id',
+                'starter': 'salad_id',
+                'drink': 'drink_id',
+                'dessert': 'dessert_id'
+            };
+
+            Object.entries(orderIds).forEach(([catKey, keyword]) => {
+                const dishObj = window.dishes.find(d => d.keyword === keyword);
+                const apiFieldName = mapCategoryToApiField[catKey];
+                
+                if (dishObj && apiFieldName) {
+                    fd.append(apiFieldName, dishObj.id); 
+                }
             });
 
             try {
-                const res = await fetch('https://httpbin.org/post', { method: 'POST', body: fd });
+                const res = await fetch(API_URL_ORDERS, { 
+                    method: 'POST', 
+                    body: fd 
+                });
+                
                 if (res.ok) {
-                    alert('Заказ успешно отправлен!');
-                    localStorage.removeItem('lunchOrder'); // Очищаем корзину после заказа
-                    location.href = 'site.html';
+                    const notif = document.createElement('div');
+                    notif.style.cssText = "position:fixed; top:20px; right:20px; background:#4CAF50; color:white; padding:20px; z-index:9999; border-radius:5px; box-shadow:0 0 10px rgba(0,0,0,0.5);";
+                    notif.textContent = "Заказ успешно оформлен!";
+                    document.body.appendChild(notif);
+
+                    localStorage.removeItem('lunchOrder'); 
+                    
+                    setTimeout(() => {
+                        location.href = 'orders.html'; 
+                    }, 1500);
+                    
+                } else {
+                    const errText = await res.text();
+                    alert(`Ошибка сервера: ${errText}`);
                 }
-            } catch (err) { alert('Ошибка сети'); }
+            } catch (err) { 
+                console.error(err);
+                alert('Ошибка сети или сервера'); 
+            }
         });
     }
 });

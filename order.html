@@ -15,58 +15,57 @@
 <header>
   <nav>
     <ul>
-      <li><a href="site.html">Главная</a></li>
-      <li><a href="lunch.html">Собрать ланч</a></li>
-      <li><a href="order.html" class="active">Оформить заказ</a></li>
-      <li><a href="site.html#about">Обо мне</a></li>
-      <li><a href="site.html#gallery">Галерея</a></li>
-      <li><a href="site.html#table">Таблица</a></li>
-      <li><a href="site.html#feedback">Обратная связь</a></li>
-      <li><a href="site.html#auth">Аутентификация</a></li>
+     <li><a href="site.html">Главная</a></li>
+    <li><a href="lunch.html">Собрать ланч</a></li>
+    <li><a href="order.html">Оформить заказ</a></li>
+    <li><a href="orders.html">Заказы</a></li> <li><a href="site.html#about">Обо мне</a></li>
     </ul>
   </nav>
 </header>
 
 <main>
-  <section id="order-composition">
-    <h2>Состав заказа</h2>
-    <div id="selected-grid" class="selected-dishes-grid"></div> 
-    <p id="no-selection" style="display: none; text-align: center;">Ничего не выбрано. Чтобы добавить блюда в заказ, перейдите на страницу <a href="lunch.html">Собрать ланч</a>.</p>
-  </section>
-
   <section class="order-section">
     <form id="order-form" class="order-form">
       <h2>Оформление заказа</h2>
 
       <div class="order-left">
         <h3>Ваш заказ</h3>
-        <div id="order-details">
-        </div>
+        <div id="order-details"></div>
 
         <div id="total-cost" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
           <p style="font-size: 20px; font-weight: 700;">Итого: <span id="total-price-value">0 ₽</span></p>
         </div>
         
         <label>Комментарии к заказу:<br>
-          <textarea name="comments" rows="6"></textarea>
+          <textarea name="comment" rows="6"></textarea>
         </label>
       </div>
 
       <div class="order-right">
         <h3>Ваши данные</h3>
-        <label>Имя <input type="text" name="name"></label>
-        <label>Email <input type="email" name="email"></label>
+        
+        <label>Имя <input type="text" name="full_name" required></label>
+        
+        <label>Email <input type="email" name="email" required></label>
+        
         <label class="consent-small">
-          <input type="checkbox" name="promos" checked> Получать информацию о скидках и акциях
+          <input type="checkbox" name="subscribe" checked> Получать информацию о скидках и акциях
         </label>
-        <label>Номер телефона <input type="tel" name="phone"></label>
-        <label>Адрес доставки <input type="text" name="address"></label>
+        
+        <label>Номер телефона <input type="tel" name="phone" required></label>
+        
+        <label>Адрес доставки <input type="text" name="delivery_address" required></label>
+        
         <p class="small-note">Доставка осуществляется только по Москве</p>
 
         <fieldset class="time-group">
           <legend>Время доставки</legend>
-          <label><input type="radio" name="time_type" value="asap" checked> Как можно скорее</label>
-          <label><input type="radio" name="time_type" value="at_time"> К указанному времени</label>
+          <label>
+              <input type="radio" name="delivery_type" value="now" checked> Как можно скорее
+          </label>
+          <label>
+              <input type="radio" name="delivery_type" value="by_time"> К указанному времени
+          </label>
         </fieldset>
 
         <label>Укажите время доставки <input type="time" name="delivery_time"></label>
