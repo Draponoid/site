@@ -1,11 +1,8 @@
-// orders.js
 
 const API_KEY_ORDERS = '2fff1a57-5506-4824-9ebc-2167fa6dcbcf'; 
 
-// Полный путь для GET запроса
 const API_URL_GET_ORDERS = `https://edu.std-900.ist.mospolytech.ru/labs/api/orders?api_key=${API_KEY_ORDERS}`;
 
-// Полный базовый путь для действий (PUT/DELETE)
 const API_BASE_ACTION = `https://edu.std-900.ist.mospolytech.ru/labs/api/orders`; 
 
 let allOrders = [];
@@ -32,7 +29,6 @@ async function loadOrders() {
         if (!response.ok) throw new Error('Ошибка загрузки заказов');
         
         allOrders = await response.json();
-        // Сортировка: новые сверху
         allOrders.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         
         renderOrdersTable();
@@ -171,7 +167,6 @@ window.openDeleteModal = function(id) {
 document.getElementById('confirm-delete-btn').addEventListener('click', async () => {
     if (!currentDeleteId) return;
     try {
-        // DELETE https://.../labs/api/orders/{id}
         const url = `${API_BASE_ACTION}/${currentDeleteId}?api_key=${API_KEY_ORDERS}`;
         const response = await fetch(url, { method: 'DELETE' });
         
@@ -225,7 +220,6 @@ document.getElementById('edit-form').addEventListener('submit', async (e) => {
     const id = fd.get('id');
     
     try {
-        // PUT https://.../labs/api/orders/{id}
         const url = `${API_BASE_ACTION}/${id}?api_key=${API_KEY_ORDERS}`;
         
         const response = await fetch(url, {

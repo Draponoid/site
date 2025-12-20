@@ -1,172 +1,160 @@
 // order-form-logic.js
-
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🏁 [Order Page] Started');
+    console.log('🏁 [Order Page] Загрузка...');
     
     const API_KEY = '2fff1a57-5506-4824-9ebc-2167fa6dcbcf'; 
-    // Полный адрес для отправки заказа
-    const API_URL_ORDERS = `https://edu.std-900.ist.mospolytech.ru/labs/api/orders?api_key=${API_KEY}`;
+    const API_URL = `https://edu.std-900.ist.mospolytech.ru/labs/api/orders?api_key=${API_KEY}`;
 
-    const DOM = {
-        grid: document.getElementById('selected-grid'),
-        noSelection: document.getElementById('no-selection'),
-        detailsDiv: document.getElementById('order-details'),
-        totalPrice: document.getElementById('total-price-value'),
-        totalDiv: document.getElementById('total-cost'),
-        form: document.getElementById('order-form')
+    // Названия категорий для вывода
+    const CAT_NAMES = {
+        soup: 'Суп',
+        main: 'Главное блюдо',
+        starter: 'Салат / Стартер',
+        drink: 'Напиток',
+        dessert: 'Десерт'
     };
 
-    const VALID_COMBOS = [
-        ['soup', 'main', 'starter', 'drink'],
-        ['soup', 'main', 'drink'],
-        ['soup', 'starter', 'drink'],
-        ['main', 'starter', 'drink'],
-        ['main', 'drink']
-    ];
+    // DOM Элементы
+    const cardsGrid = document.getElementById('cards-grid');
+    const summaryList = document.getElementById('order-summary-list');
+    const totalPriceEl = document.getElementById('total-price-sum');
+    const emptyMsg = document.getElementById('empty-message');
+    const form = document.getElementById('order-form');
 
-    if (DOM.form) DOM.form.style.display = 'grid';
-
-    function getOrderFromStorage() {
+    // Функция чтения из LocalStorage
+    function getOrder() {
         try {
             const raw = localStorage.getItem('lunchOrder');
-            if (raw && raw !== '{}') return JSON.parse(raw);
-        } catch(e) { console.error(e); }
-        return null;
+            return raw ? JSON.parse(raw) : {};
+        } catch(e) { return {}; }
     }
 
-    function validateOrder(orderData) {
-        if (!orderData) return false;
-        const currentCats = Object.keys(orderData);
-        return VALID_COMBOS.some(combo => 
-            combo.every(cat => currentCats.includes(cat))
-        );
-    }
-
+    // Ждем загрузки данных о блюдах
     const checkInterval = setInterval(() => {
         if (window.dishes && window.dishes.length > 0) {
             clearInterval(checkInterval);
-            renderOrder(getOrderFromStorage());
+            renderAll();
         }
     }, 200);
 
-    function renderOrder(orderIds) {
-        if (!orderIds || Object.keys(orderIds).length === 0) {
-            if (DOM.noSelection) DOM.noSelection.style.display = 'block';
+    function renderAll() {
+        const orderData = getOrder();
+        const cats = Object.keys(orderData);
+        
+        // Очистка
+        cardsGrid.innerHTML = '';
+        summaryList.innerHTML = '';
+
+        if (cats.length === 0) {
+            emptyMsg.style.display = 'block';
+            form.style.display = 'none'; // Скрываем форму, если пусто
             return;
+        } else {
+            emptyMsg.style.display = 'none';
+            form.style.display = 'grid';
         }
 
-        const NAMES = { soup:'Суп', main:'Главное', starter:'Салат', drink:'Напиток', dessert:'Десерт' };
-        let totalCost = 0;
-        let itemsFound = 0;
+        let total = 0;
 
-        if (DOM.grid) DOM.grid.innerHTML = '';
-        if (DOM.detailsDiv) DOM.detailsDiv.innerHTML = '';
+        // Порядок вывода (как на макете)
+        const orderPriority = ['soup', 'main', 'starter', 'drink', 'dessert'];
+        
+        // Сортируем категории для вывода
+        const sortedCats = cats.sort((a, b) => orderPriority.indexOf(a) - orderPriority.indexOf(b));
 
-        Object.keys(orderIds).forEach(cat => {
-            const id = orderIds[cat]; 
-            const dish = window.dishes.find(d => d.keyword === id); 
-            
+        sortedCats.forEach(cat => {
+            const keyword = orderData[cat];
+            const dish = window.dishes.find(d => d.keyword === keyword);
             if (!dish) return;
 
-            itemsFound++;
-            totalCost += dish.price;
+            total += dish.price;
 
-            if (DOM.grid) {
-                const card = document.createElement('div');
-                card.className = 'food-card';
-                card.style.cssText = 'border:1px solid #ddd; padding:10px; border-radius:10px; display:flex; flex-direction:column; gap:10px;';
-                
-                const imgSrc = (dish.image && dish.image.startsWith('http')) 
-                    ? dish.image 
-                    : `https://edu.std-900.ist.mospolytech.ru${dish.image}`;
+            // 1. РЕНДЕР КАРТОЧКИ (ВЕРХ)
+            const card = document.createElement('div');
+            card.className = 'order-card';
+            const img = dish.image.startsWith('http') ? dish.image : `https://edu.std-900.ist.mospolytech.ru${dish.image}`;
+            
+            card.innerHTML = `
+                <img src="${img}" alt="${dish.name}">
+                <div class="card-price">${dish.price}₽</div>
+                <div class="card-name">${dish.name}</div>
+                <div class="card-weight">${dish.count}</div>
+                <button type="button" class="delete-btn">Удалить</button>
+            `;
 
-                card.innerHTML = `
-                    <img src="${imgSrc}" style="width:100%; height:120px; object-fit:cover; border-radius:5px;">
-                    <div style="font-weight:bold;">${dish.name}</div>
-                    <div style="color:#e74c3c; font-weight:bold;">${dish.price} ₽</div>
-                    <button class="del-btn" type="button" style="margin-top:auto; padding:8px; cursor:pointer; background:#ffeba0; border:none; border-radius:5px;">Удалить</button>
-                `;
+            // Удаление
+            card.querySelector('.delete-btn').addEventListener('click', () => {
+                removeItem(cat);
+            });
+            cardsGrid.appendChild(card);
 
-                card.querySelector('.del-btn').addEventListener('click', () => {
-                    const currentData = getOrderFromStorage();
-                    delete currentData[cat];
-                    localStorage.setItem('lunchOrder', JSON.stringify(currentData));
-                    location.reload();
-                });
-                DOM.grid.appendChild(card);
-            }
-
-            if (DOM.detailsDiv) {
-                DOM.detailsDiv.innerHTML += `
-                    <div style="display:flex; justify-content:space-between; margin-bottom:5px; border-bottom:1px solid #eee;">
-                        <span>${NAMES[cat]}</span> <b>${dish.price} ₽</b>
-                    </div>
-                `;
-            }
+            // 2. РЕНДЕР СПИСКА (НИЗ, СЛЕВА)
+            const summaryItem = document.createElement('div');
+            summaryItem.className = 'summary-item';
+            summaryItem.innerHTML = `
+                <div class="summary-cat">${CAT_NAMES[cat] || cat}</div>
+                <div class="summary-name">${dish.name} <b style="margin-left:5px;">${dish.price}₽</b></div>
+            `;
+            summaryList.appendChild(summaryItem);
         });
 
-        if (itemsFound > 0) {
-            if (DOM.noSelection) DOM.noSelection.style.display = 'none';
-            if (DOM.totalDiv) DOM.totalDiv.style.display = 'block';
-            if (DOM.totalPrice) DOM.totalPrice.textContent = totalCost + ' ₽';
-        }
+        // Итого
+        if (totalPriceEl) totalPriceEl.textContent = total + '₽';
     }
 
-    if (DOM.form) {
-        DOM.form.addEventListener('submit', async (e) => {
+    function removeItem(category) {
+        const data = getOrder();
+        delete data[category];
+        localStorage.setItem('lunchOrder', JSON.stringify(data));
+        renderAll(); // Перерисовка всего
+    }
+
+    // ОТПРАВКА ФОРМЫ
+    if (form) {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const orderData = getOrder();
             
-            const orderIds = getOrderFromStorage(); 
-            
-            if (!validateOrder(orderIds)) {
-                alert('Заказ неполный! Соберите комбо (Суп/Главное + Напиток).');
+            if (Object.keys(orderData).length === 0) {
+                alert('Корзина пуста');
                 return;
             }
 
-            const fd = new FormData(DOM.form);
+            const fd = new FormData(form);
 
-            const mapCategoryToApiField = {
-                'soup': 'soup_id',
-                'main': 'main_course_id',
-                'starter': 'salad_id',
-                'drink': 'drink_id',
-                'dessert': 'dessert_id'
+            // Добавляем ID блюд
+            const apiFields = {
+                soup: 'soup_id',
+                main: 'main_course_id',
+                starter: 'salad_id',
+                drink: 'drink_id',
+                dessert: 'dessert_id'
             };
 
-            Object.entries(orderIds).forEach(([catKey, keyword]) => {
-                const dishObj = window.dishes.find(d => d.keyword === keyword);
-                const apiFieldName = mapCategoryToApiField[catKey];
-                
-                if (dishObj && apiFieldName) {
-                    fd.append(apiFieldName, dishObj.id); 
+            Object.keys(orderData).forEach(cat => {
+                const keyword = orderData[cat];
+                const dish = window.dishes.find(d => d.keyword === keyword);
+                if (dish && apiFields[cat]) {
+                    fd.append(apiFields[cat], dish.id);
                 }
             });
 
             try {
-                const res = await fetch(API_URL_ORDERS, { 
-                    method: 'POST', 
-                    body: fd 
-                });
-                
+                const res = await fetch(API_URL, { method: 'POST', body: fd });
                 if (res.ok) {
                     const notif = document.createElement('div');
-                    notif.style.cssText = "position:fixed; top:20px; right:20px; background:#4CAF50; color:white; padding:20px; z-index:9999; border-radius:5px; box-shadow:0 0 10px rgba(0,0,0,0.5);";
                     notif.textContent = "Заказ успешно оформлен!";
+                    notif.style.cssText = "position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:white; border:2px solid green; padding:30px; z-index:9999; border-radius:10px; font-size:18px;";
                     document.body.appendChild(notif);
-
-                    localStorage.removeItem('lunchOrder'); 
                     
-                    setTimeout(() => {
-                        location.href = 'orders.html'; 
-                    }, 1500);
-                    
+                    localStorage.removeItem('lunchOrder');
+                    setTimeout(() => window.location.href = 'orders.html', 2000);
                 } else {
-                    const errText = await res.text();
-                    alert(`Ошибка сервера: ${errText}`);
+                    const err = await res.json();
+                    alert('Ошибка: ' + (err.error || 'Неизвестная ошибка'));
                 }
-            } catch (err) { 
-                console.error(err);
-                alert('Ошибка сети или сервера'); 
+            } catch (e) {
+                alert('Ошибка сети');
             }
         });
     }

@@ -1,135 +1,264 @@
-<<!-- Обновленный site.html (добавлена ссылка в nav) -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Главная страница</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Доставка вкусных ланчей</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fff;
+            color: #333;
+        }
 
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+        /* Навигация */
+        .navbar-brand {
+            font-weight: 700;
+            color: #4a90e2 !important;
+        }
+        .nav-link {
+            font-weight: 500;
+            color: #555 !important;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #4a90e2 !important;
+        }
 
-  <!-- Основные стили -->
-  <link rel="stylesheet" href="style.css">
+        /* Hero Section (Исправлено) */
+        .hero-section {
+            background-color: #f8f9fa; /* Светлый фон */
+            padding: 80px 0; /* Большие отступы сверху и снизу */
+            position: relative;
+        }
+        
+        .hero-text-col {
+            z-index: 2; /* Текст всегда поверх фона */
+            position: relative;
+        }
 
-  <!-- Печать -->
-  <link rel="stylesheet" href="print.css" media="print">
+        .hero-img {
+            width: 100%; /* На всю ширину колонки */
+            height: auto; /* Высота авто */
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            object-fit: cover;
+        }
+
+        /* Иконки преимуществ */
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: #e6f2ff;
+            color: #4a90e2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .feature-card {
+            padding: 30px;
+            border: 1px solid #eee;
+            border-radius: 15px;
+            transition: all 0.3s;
+            height: 100%;
+            background: white;
+        }
+        .feature-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-color: #4a90e2;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #4a90e2 0%, #63a4ff 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+        .btn-light-custom {
+            background: white;
+            color: #4a90e2;
+            font-weight: bold;
+            padding: 12px 30px;
+            border-radius: 30px;
+            border: none;
+            transition: all 0.2s;
+        }
+        .btn-light-custom:hover {
+            background: #f1f1f1;
+            transform: scale(1.05);
+        }
+
+        /* Футер */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 
-<header>
-  <nav>
-    <ul>
-      <li><a href="site.html" class="active">Главная</a></li>
-      <li><a href="lunch.html">Собрать ланч</a></li>
-      <li><a href="order.html">Оформить заказ</a></li>
-      <li><a href="#about">Обо мне</a></li>
-      <li><a href="#gallery">Галерея</a></li>
-      <li><a href="#table">Таблица</a></li>
-      <li><a href="#feedback">Обратная связь</a></li>
-      <li><a href="#auth">Аутентификация</a></li>
-    </ul>
-  </nav>
-</header>
-
-<main>
-  <section id="about">
-    <h2>Обо мне</h2>
-    <p>Здесь раздел "Обо мне"</p>
-  </section>
-
-  <section id="gallery">
-    <h2>Галерея</h2>
-    <div class="gallery-container">
-      <img src="images/picture.webp" alt="Изображение">
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="site.html">🍱 Lunch Delivery</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav gap-2">
+        <li class="nav-item"><a class="nav-link active" href="site.html">Главная</a></li>
+        <li class="nav-item"><a class="nav-link" href="lunch.html">Собрать ланч</a></li>
+        <li class="nav-item"><a class="nav-link" href="order.html">Оформить заказ</a></li>
+        <li class="nav-item"><a class="nav-link" href="orders.html">Заказы</a></li>
+        <li class="nav-item"><a class="nav-link" href="#contacts">Контакты</a></li>
+      </ul>
     </div>
-  </section>
+  </div>
+</nav>
 
-  <section id="table">
-    <h2>Таблица</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Языки программирования</th>
-          <th>Заголовок 2</th>
-          <th>Заголовок 3</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>C++</td><td>-</td><td>-</td></tr>
-        <tr><td>HTML</td><td>-</td><td>-</td></tr>
-      </tbody>
-    </table>
-  </section>
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center gy-5"> <div class="col-lg-6 hero-text-col">
+                <h1 class="display-4 fw-bold mb-3 text-dark">Вкусные ланчи с доставкой в универ</h1>
+                <p class="lead text-secondary mb-4">
+                    Забудьте о длинных очередях в столовой. Собирайте свои идеальные комбо-наборы онлайн и получайте их точно к перерыву.
+                </p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="lunch.html" class="btn btn-primary btn-lg rounded-pill px-4 shadow-sm" style="background-color: #4a90e2; border:none;">Собрать ланч</a>
+                    <a href="#features" class="btn btn-outline-secondary btn-lg rounded-pill px-4">Узнать больше</a>
+                </div>
+            </div>
 
-  <section id="feedback">
-    <h2>Форма обратной связи</h2>
-    <form action="https://httpbin.org/post" method="POST" enctype="multipart/form-data" class="feedback-form">
-      <label>ФИО:<br>
-        <input type="text" name="fio" required>
-      </label>
-
-      <label>Email:<br>
-        <input type="email" name="email" required>
-      </label>
-
-      <fieldset>
-        <legend>Откуда вы узнали о нас?</legend>
-        <label><input type="radio" name="source" value="internet"> Интернет</label>
-        <label><input type="radio" name="source" value="friends"> Друзья</label>
-        <label><input type="radio" name="source" value="ads"> Реклама</label>
-      </fieldset>
-
-      <label>Тип обращения:<br>
-        <select name="type">
-          <option value="complaint">Жалоба</option>
-          <option value="suggestion">Предложение</option>
-        </select>
-      </label>
-
-      <label>Текст сообщения:<br>
-        <textarea name="message" rows="5" required></textarea>
-      </label>
-
-      <label>Вложение:<br>
-        <input type="file" name="file">
-      </label>
-
-      <label class="consent">
-        <input type="checkbox" name="consent" required> Даю согласие на обработку персональных данных
-      </label>
-
-      <button type="submit">Отправить</button>
-    </form>
-  </section>
-
-  <section id="auth" class="auth-section">
-    <div class="auth-container">
-      <form action="https://httpbin.org/post" method="POST" class="auth-form">
-        <h2>Вход в систему</h2>
-
-        <label>Логин:<br>
-          <input type="text" name="login" required>
-        </label>
-
-        <label>Пароль:<br>
-          <input type="password" name="password" required>
-        </label>
-
-        <label class="remember">
-          <input type="checkbox" name="remember"> Запомнить меня
-        </label>
-
-        <button type="submit">Войти</button>
-      </form>
+            <div class="col-lg-6">
+                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                     alt="Ланч боул" class="hero-img mb-3">
+                
+                <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                     alt="Здоровый обед" class="hero-img d-none d-md-block"> </div>
+            
+        </div>
     </div>
-  </section>
-</main>
+</section>
 
-<footer id="contacts">
-  <p class="footer-call">Позвонить нам +7-000-000-00-00</p>
-  <p>&copy; 2025</p>
+<section id="features" class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-dark">Почему выбирают нас?</h2>
+            <p class="text-secondary">Мы заботимся о том, чтобы вы были сыты и довольны</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h4>Быстрая доставка</h4>
+                    <p class="text-secondary">Доставляем еду горячей и вовремя. Никаких опозданий на пары.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">🥗</div>
+                    <h4>Свежие продукты</h4>
+                    <p class="text-secondary">Готовим каждое утро из отборных ингредиентов. Меню обновляется ежедневно.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h4>Выгодные комбо</h4>
+                    <p class="text-secondary">Конструктор ланчей позволяет собрать обед под любой бюджет со скидкой.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="mb-3 text-white">Проголодались?</h2>
+                <p class="lead mb-4 text-white">Соберите свой идеальный обед прямо сейчас в нашем конструкторе.</p>
+                <a href="lunch.html" class="btn btn-light-custom btn-lg shadow">Перейти к меню</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="contacts" class="py-5 bg-white">
+    <div class="container">
+        <div class="row gy-4">
+            <div class="col-lg-5">
+                <h2 class="fw-bold mb-4 text-dark">Наши контакты</h2>
+                <p class="text-secondary mb-4">Остались вопросы? Мы всегда на связи!</p>
+                
+                <div class="d-flex align-items-start mb-3">
+                    <div class="me-3 text-primary h4">📍</div>
+                    <div>
+                        <h5 class="mb-1 text-dark">Адрес</h5>
+                        <p class="text-secondary">г. Москва, ул. Большая Семеновская, д. 38</p>
+                    </div>
+                </div>
+                
+                <div class="d-flex align-items-start mb-3">
+                    <div class="me-3 text-primary h4">📞</div>
+                    <div>
+                        <h5 class="mb-1 text-dark">Телефон</h5>
+                        <p class="text-secondary">+7 (900) 123-45-67</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-7">
+                <div class="p-4 rounded-4 shadow-sm border bg-light">
+                    <h3 class="mb-4 text-dark">Напишите нам</h3>
+                    <form action="https://httpbin.org/post" method="POST">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label text-dark">Ваше имя</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label text-dark">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="message" class="form-label text-dark">Сообщение</label>
+                                <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="consent" required>
+                                    <label class="form-check-label small text-secondary" for="consent">
+                                        Согласен на обработку персональных данных
+                                    </label>
+                                </div>
+                                <button type="submit" class="btn btn-primary px-5 py-2" style="background-color: #4a90e2; border:none;">Отправить</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <p class="mb-0">&copy; 2025 Lunch Delivery. Все права защищены.</p>
+    </div>
 </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

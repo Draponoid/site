@@ -8,79 +8,95 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="lunch.css">
-  <link rel="stylesheet" href="print.css" media="print">
 </head>
 <body>
 
 <header>
   <nav>
+    <div class="logo">Food Construct</div>
     <ul>
      <li><a href="site.html">Главная</a></li>
     <li><a href="lunch.html">Собрать ланч</a></li>
-    <li><a href="order.html">Оформить заказ</a></li>
-    <li><a href="orders.html">Заказы</a></li> <li><a href="site.html#about">Обо мне</a></li>
+    <li><a href="order.html" class="active">Оформить заказ</a></li>
+    <li><a href="orders.html">Заказы</a></li> 
     </ul>
   </nav>
 </header>
 
-<main>
-  <section class="order-section">
-    <form id="order-form" class="order-form">
-      <h2>Оформление заказа</h2>
-
-      <div class="order-left">
-        <h3>Ваш заказ</h3>
-        <div id="order-details"></div>
-
-        <div id="total-cost" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
-          <p style="font-size: 20px; font-weight: 700;">Итого: <span id="total-price-value">0 ₽</span></p>
+<main class="order-page-wrapper">
+  
+  <section class="top-section">
+    <h2 class="section-title">Состав заказа</h2>
+    
+    <div id="cards-grid" class="cards-grid">
         </div>
-        
-        <label>Комментарии к заказу:<br>
-          <textarea name="comment" rows="6"></textarea>
-        </label>
-      </div>
+    
+    <div id="empty-message" style="display:none; text-align:center; padding: 40px;">
+        <p>Вы ничего не выбрали.</p>
+        <a href="lunch.html" class="btn-link">Перейти в меню</a>
+    </div>
+  </section>
 
-      <div class="order-right">
-        <h3>Ваши данные</h3>
+  <section class="bottom-section">
+    <h2 class="section-title">Оформление заказа</h2>
+    
+    <form id="order-form" class="checkout-form">
         
-        <label>Имя <input type="text" name="full_name" required></label>
-        
-        <label>Email <input type="email" name="email" required></label>
-        
-        <label class="consent-small">
-          <input type="checkbox" name="subscribe" checked> Получать информацию о скидках и акциях
-        </label>
-        
-        <label>Номер телефона <input type="tel" name="phone" required></label>
-        
-        <label>Адрес доставки <input type="text" name="delivery_address" required></label>
-        
-        <p class="small-note">Доставка осуществляется только по Москве</p>
+        <div class="col-left">
+            <h3>Ваш заказ</h3>
+            <div id="order-summary-list" class="summary-list">
+                </div>
+            
+            <div class="total-row">
+                <span>Стоимость заказа</span>
+                <span id="total-price-sum" class="total-price">0₽</span>
+            </div>
 
-        <fieldset class="time-group">
-          <legend>Время доставки</legend>
-          <label>
-              <input type="radio" name="delivery_type" value="now" checked> Как можно скорее
-          </label>
-          <label>
-              <input type="radio" name="delivery_type" value="by_time"> К указанному времени
-          </label>
-        </fieldset>
-
-        <label>Укажите время доставки <input type="time" name="delivery_time"></label>
-
-        <div class="order-buttons">
-          <button type="reset" class="btn-reset">Сбросить</button>
-          <button type="submit" class="btn-submit">Отправить</button>
+            <label class="comment-label">Комментарии к заказу
+                <textarea name="comment" rows="5"></textarea>
+            </label>
         </div>
-      </div>
+
+        <div class="col-right">
+            <h3>Ваши данные</h3>
+            
+            <label>Имя <input type="text" name="full_name" required></label>
+            
+            <label>Email <input type="email" name="email" required></label>
+            
+            <label class="checkbox-label">
+                <input type="checkbox" name="subscribe" checked> Получать информацию о скидках и акциях
+            </label>
+            
+            <label>Номер телефона <input type="tel" name="phone" required></label>
+            
+            <label>Адрес доставки <input type="text" name="delivery_address" required></label>
+            <div class="hint">Доставка осуществляется только по Москве</div>
+
+            <div class="time-selection">
+                <label>Время доставки:</label>
+                <label class="radio-row"><input type="radio" name="delivery_type" value="now" checked> Как можно скорее</label>
+                <label class="radio-row"><input type="radio" name="delivery_type" value="by_time"> К указанному времени</label>
+            </div>
+
+            <label>Укажите время доставки
+                <input type="time" name="delivery_time" min="07:00" max="23:00">
+            </label>
+            <div class="hint">Доступное время доставки с 7:00 до 23:00</div>
+
+            <div class="form-buttons">
+                <button type="reset" class="btn-reset">Сбросить</button>
+                <button type="submit" class="btn-submit">Отправить</button>
+            </div>
+        </div>
+
     </form>
   </section>
+
 </main>
 
-<footer>
-  <p>&copy; 2025 Доставка ланчей. Все права защищены.</p>
+<footer style="background:black; color:white; padding:20px; text-align:left;">
+  <p>Позвонить нам +7-000-000-00-00</p>
 </footer>
 
 <script src="dishes.js"></script> 
